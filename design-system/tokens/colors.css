@@ -1,0 +1,83 @@
+:root{
+/* --- Green (thistle stem) --- primary family --- */
+--green-50:oklch(97% 0.018 142);
+--green-100:oklch(93% 0.032 142);
+--green-200:oklch(86% 0.05 143);
+--green-300:oklch(76% 0.068 144);
+--green-400:oklch(64% 0.078 146);
+--green-500:oklch(52% 0.075 147);
+--green-600:oklch(43% 0.068 148);
+--green-700:oklch(34% 0.058 150);
+--green-800:oklch(26% 0.044 151);
+--green-900:oklch(18% 0.03 152);
+
+/* --- Plum (thistle bloom) --- accent family --- */
+--plum-50:oklch(96% 0.016 322);
+--plum-100:oklch(91% 0.03 322);
+--plum-200:oklch(83% 0.05 323);
+--plum-300:oklch(72% 0.068 325);
+--plum-400:oklch(60% 0.088 326);
+--plum-500:oklch(49% 0.092 328);
+--plum-600:oklch(41% 0.086 328);
+--plum-700:oklch(32% 0.07 328);
+--plum-800:oklch(24% 0.05 328);
+
+/* --- Sand (warm earthy neutrals) --- */
+--sand-50:oklch(98% 0.012 80);
+--sand-100:oklch(95.5% 0.018 76);
+--sand-200:oklch(90.5% 0.026 72);
+--sand-300:oklch(83% 0.036 66);
+--sand-400:oklch(71% 0.044 60);
+--sand-500:oklch(59% 0.048 55);
+--sand-600:oklch(47% 0.044 50);
+--sand-700:oklch(37% 0.036 46);
+--sand-800:oklch(28% 0.026 42);
+--sand-900:oklch(20% 0.018 42);
+
+/* --- Clay (warm tertiary, for small warm highlights) --- */
+--clay-400:oklch(72% 0.1 48);
+--clay-500:oklch(60% 0.12 45);
+--clay-600:oklch(49% 0.11 42);
+
+/* --- Ink (near-black, green-leaning, matches engraved logotype) --- */
+--ink:oklch(21% 0.024 165);
+
+/* --- Semantic surfaces --- */
+--color-page:var(--sand-100);
+--color-surface:var(--sand-50);
+--color-surface-alt:var(--sand-200);
+--color-surface-sunken:oklch(92% 0.022 74);
+--color-border:var(--sand-300);
+--color-border-strong:var(--sand-500);
+
+/* --- Semantic text --- */
+--color-text:var(--ink);
+--color-text-soft:var(--sand-700);
+--color-text-faint:var(--sand-500);
+--color-text-on-primary:var(--green-50);
+--color-text-on-accent:var(--plum-50);
+
+/* --- Semantic brand --- */
+--color-primary:var(--green-600);
+--color-primary-hover:var(--green-700);
+--color-primary-active:var(--green-800);
+--color-primary-soft:var(--green-100);
+--color-accent:var(--plum-500);
+--color-accent-hover:var(--plum-600);
+--color-accent-active:var(--plum-700);
+--color-accent-soft:var(--plum-100);
+
+/* --- Semantic status (kept earthy, never neon) --- */
+--color-success:var(--green-600);
+--color-success-soft:var(--green-100);
+--color-warning:var(--clay-500);
+--color-warning-soft:oklch(93% 0.05 75);
+--color-danger:oklch(46% 0.13 26);
+--color-danger-soft:oklch(93% 0.035 26);
+--color-info:oklch(46% 0.055 210);
+--color-info-soft:oklch(93% 0.02 210);
+
+/* --- Links --- */
+--color-link:var(--green-700);
+--color-link-hover:var(--plum-600);
+}

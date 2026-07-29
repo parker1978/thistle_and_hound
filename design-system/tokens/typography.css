@@ -1,0 +1,44 @@
+@font-face{font-family:'Cormorant Garamond Fallback';src:local('Georgia');size-adjust:105%;ascent-override:95%;}
+:root{
+--font-display:'Cormorant Garamond','Cormorant Garamond Fallback',Georgia,serif;
+--font-body:'Work Sans',-apple-system,'Segoe UI',sans-serif;
+
+/* type scale (px, 4pt-ish rhythm) */
+--text-xs:12px;
+--text-sm:14px;
+--text-base:16px;
+--text-md:18px;
+--text-lg:21px;
+--text-xl:26px;
+--text-2xl:32px;
+--text-3xl:40px;
+--text-4xl:52px;
+--text-5xl:68px;
+--text-6xl:88px;
+
+--leading-tight:1.08;
+--leading-snug:1.25;
+--leading-normal:1.5;
+--leading-relaxed:1.7;
+
+--tracking-tight:-0.01em;
+--tracking-normal:0;
+--tracking-wide:0.04em;
+--tracking-badge:0.16em;
+
+--weight-regular:400;
+--weight-medium:500;
+--weight-semibold:600;
+
+/* semantic type roles */
+--font-hero:var(--weight-regular) var(--text-6xl)/var(--leading-tight) var(--font-display);
+--font-display-lg:var(--weight-regular) var(--text-4xl)/var(--leading-tight) var(--font-display);
+--font-display-md:var(--weight-regular) var(--text-3xl)/var(--leading-tight) var(--font-display);
+--font-display-sm:var(--weight-medium) var(--text-2xl)/var(--leading-snug) var(--font-display);
+--font-eyebrow:var(--weight-semibold) var(--text-sm)/1 var(--font-body);
+--font-body-lg:var(--weight-regular) var(--text-md)/var(--leading-relaxed) var(--font-body);
+--font-body-md:var(--weight-regular) var(--text-base)/var(--leading-normal) var(--font-body);
+--font-body-sm:var(--weight-regular) var(--text-sm)/var(--leading-normal) var(--font-body);
+--font-label:var(--weight-medium) var(--text-sm)/1.2 var(--font-body);
+--font-caption:var(--weight-regular) var(--text-xs)/1.3 var(--font-body);
+}

@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap');
+@import 'tokens/colors.css';
+@import 'tokens/typography.css';
+@import 'tokens/spacing.css';
+@import 'tokens/effects.css';
+@import 'components/components.css';
+
+*{box-sizing:border-box;}
+body{margin:0;font:var(--font-body-md);color:var(--color-text);background:var(--color-page);}
+a{color:var(--color-link);}
+a:hover{color:var(--color-link-hover);}
