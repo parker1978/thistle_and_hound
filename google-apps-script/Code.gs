@@ -158,7 +158,7 @@ function submitEntry(data) {
     // A retry (including a lost response) returns the same success without another entry.
     const priorEntry = rows_(entries).find(row => row[1] === event.id && row[3] === customerId);
     if (priorEntry) {
-      syncConsent_(customers, matches[0].index + 2, priorEntry[9] === true, priorEntry[10] === true, priorEntry[4]);
+      syncConsent_(customers, matches[0].index + 2, String(priorEntry[9]).toLowerCase() === 'true', String(priorEntry[10]).toLowerCase() === 'true', priorEntry[4]);
       SpreadsheetApp.flush();
       return {ok:true};
     }

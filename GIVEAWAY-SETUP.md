@@ -1,6 +1,6 @@
 # Thistle & Hound event giveaway
 
-The page and Google Sheets integration code are ready. The private spreadsheet and Apps Script project have been created. **Google authorization, web-app deployment, and website publication are still pending.** The page shows a registration-not-ready message until the form URL is configured. Never collect entries through the local test preview.
+The registration form is deployed and connected to the private spreadsheet. The website page is configured for this deployment. Live tests verified a new customer, a duplicate submission, and the same customer entering a second event. Test records were removed. The local static preview is for design review only.
 
 ## This event
 
@@ -15,6 +15,7 @@ The page and Google Sheets integration code are ready. The private spreadsheet a
 
 - Private registrations sheet: https://docs.google.com/spreadsheets/d/1cSsDUJ1EHrfYpnTLYf45qDgPlczCehSzUwdrOjSUpgc/edit
 - Apps Script project: https://script.google.com/home/projects/1FK7XGmIafA0sn3HbGGFsYBNkeME1NkdWZr6Ro68BoMbUHvCtxTygGnvm/edit
+- Public form deployment: https://script.google.com/macros/s/AKfycbxVrwcLWcQ_Y1BLmDWXv49e0m1-4WPqyn_i7bbFidLO33-QmVTItkxLDzw4VPY7Ecc8yA/exec (version 2)
 - The event row, September 27 closing/drawing times, Chicago timezone, and private sharing have been verified.
 
 ## Connect Google once
@@ -22,7 +23,7 @@ The page and Google Sheets integration code are ready. The private spreadsheet a
 1. Open the existing Apps Script project linked above while signed into parker1978@gmail.com.
 2. Name it **Thistle & Hound — Giveaway registrations**. Copy `google-apps-script/Code.gs` into the project's Code.gs. Add an HTML file named **Form** and copy `google-apps-script/Form.html` into it.
 3. In Project Settings, show the `appsscript.json` manifest, and replace it with the supplied `google-apps-script/appsscript.json`. It uses the Chicago time zone and only the Google Sheets permission.
-4. Run **setupGiveaway_** from the editor. The account owner must authorize Google Sheets access. It connects to the private spreadsheet already created, checks its tables, initializes the form signing secret, and prints the spreadsheet URL in the execution log. Run this setup only from the editor; the trailing underscore prevents visitors from calling it. Do not remove that underscore.
+4. Setup is already complete for this project. For a new installation, temporarily add `function initializeGiveaway() { return setupGiveaway_(); }`, run **initializeGiveaway**, then remove that wrapper and save before deployment. The editor hides functions ending in an underscore from its Run menu. The account owner must authorize Google Sheets access. It connects to the private spreadsheet already created, checks its tables, initializes the form signing secret, and prints the spreadsheet URL in the execution log. Run this setup only from the editor; the trailing underscore prevents visitors from calling it. Do not remove that underscore.
 5. Open the spreadsheet. Review the **Events** row, especially eligibility and rules. No age or geographic restriction was supplied, so none has been invented. Add any applicable service-area limits before launch. Status is `open`, with an opening date of September 21 and automatic closing at the configured deadline. Change status to `paused` to stop entries at any time. Keep the spreadsheet's sharing set to **Restricted**.
 6. Deploy the script as a **Web app**, executing as **Me** (the owner), with access for **Anyone**. This exposes only the public entry form and its two narrow registration functions; it does not publish the spreadsheet. If your Google account does not allow anonymous web apps, use an account that does or arrange another form backend. Do not set execution to the visiting user: visitors should not have to sign in.
 7. Copy the deployment URL ending in `/exec` into `formUrl` in `giveaway/config.js`. Keep the default event ID as supplied. No spreadsheet ID, secret, or Google credential goes into the public website.
@@ -60,6 +61,6 @@ The page reads the event ID from its URL, and the form reads its event details f
 - `giveaway/`: static branded landing page and public form URL configuration.
 - `google-apps-script/`: backend and hosted entry form. Copy these files into Apps Script.
 - `giveaway/marge-durham-2026-qr.png` and `.svg`: printable event QR assets. They point to the final website URL, which must be live before use.
-- `tests/giveaway.test.cjs`: run `node --test tests/giveaway.test.cjs` (Node 18+). Fifteen tests cover normalization, per-event uniqueness, contacts that conflict, consent, expiry, malicious cell values, retry recovery and privacy.
+- `tests/giveaway.test.cjs`: run `node --test tests/giveaway.test.cjs` (Node 18+). Sixteen tests cover normalization, per-event uniqueness, contacts that conflict, consent, expiry, malicious cell values, retry recovery and privacy.
 
-The integration uses Google's supported [HTML-service RPC](https://developers.google.com/apps-script/guides/html/communication) and [web-app deployment](https://developers.google.com/apps-script/guides/web). It uses an embedded Google-hosted form instead of relying on cross-origin submission tricks. A direct-form link is available if embedding is blocked. Basic bot checks are a honeypot and a short-lived signed form token; this is not a CAPTCHA or a high-volume abuse prevention system. Google account quotas apply. Verify the live anonymous deployment before the event.
+The integration uses Google's supported [HTML-service RPC](https://developers.google.com/apps-script/guides/html/communication) and [web-app deployment](https://developers.google.com/apps-script/guides/web). It uses an embedded Google-hosted form instead of relying on cross-origin submission tricks. A prominent direct-form button is available while the embedded form loads or if a phone blocks embedding. Basic bot checks are a honeypot and a short-lived signed form token; this is not a CAPTCHA or a high-volume abuse prevention system. Google account quotas apply. Verify the live anonymous deployment before the event.

@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../design-system/tokens/colors.css">
-  <link rel="stylesheet" href="giveaway.css">
-  <script src="config.js" defer></script>
-  <script src="giveaway.js" defer></script>
+  <link rel="stylesheet" href="giveaway.css?v=20260921-2">
+  <script src="config.js?v=20260921-2" defer></script>
+  <script src="giveaway.js?v=20260921-2" defer></script>
 </head>
 <body>
   <a class="skip" href="#enter">Skip to entry form</a>
@@ -32,6 +32,7 @@
         <div class="care-note"><span aria-hidden="true">⌂</span><p><strong>Kind care, at home.</strong><br>One-on-one attention. Zero car rides.</p></div>
       </section>
       <section class="entry-card" id="enter" aria-label="Giveaway entry">
+        <div id="form-loading" class="form-loading" hidden><p class="eyebrow">One lucky dog. One easy entry.</p><h2>Enter the drawing</h2><p id="loading-copy" role="status">Loading your entry form…</p><a id="open-form" class="open-form">Open the entry form</a><p class="loading-note">If the form doesn’t appear here, open it directly to enter.</p></div>
         <iframe id="entry-frame" title="Enter the Thistle and Hound giveaway" src="../google-apps-script/Form.html" height="1390"></iframe>
         <p class="frame-help" id="frame-help" hidden>Form not loading? <a id="direct-link" target="_blank" rel="noopener">Open the entry form</a>.</p>
         <noscript><p>Please enable JavaScript to enter, or ask us for help at the booth.</p></noscript>

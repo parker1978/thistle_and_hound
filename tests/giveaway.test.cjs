@@ -96,3 +96,13 @@ test('manual unsubscribe suppression survives future registrations',()=>{
 test('public reads never reveal customer data or spreadsheet identifiers',()=>{
   const f=fixture();f.context.submitEntry(f.input());const response=JSON.stringify(f.context.getEvent(f.eventId));assert.doesNotMatch(response,/taylor|private-sheet|customer_id/);
 });
+
+test('retry recovers consent when Google Sheets returns plain-text booleans',()=>{
+  const f=fixture();const p=f.input({emailOptIn:true});
+  f.fail((name,row,col)=>name==='Customers'&&row===2&&col===8);
+  assert.throws(()=>f.context.submitEntry(p),/Simulated/);
+  f.sheets.Entries.data[1][9]='true';f.sheets.Entries.data[1][10]='false';
+  assert.equal(f.context.submitEntry(p).ok,true);
+  assert.ok(f.sheets.Customers.data[1][7]);assert.equal(f.sheets.Customers.data[1][8],'');
+  assert.equal(f.sheets.Entries.data.length,2);
+});
