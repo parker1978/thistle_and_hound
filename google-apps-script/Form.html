@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base target="_top">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fcf9f3;color:#17261f;font:13px/1.65 'Work Sans',sans-serif;padding:28px}h1,h2,legend{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500}h1{font-size:36px;line-height:1.1;margin:8px 0 10px}p{margin:0 0 15px}.eyebrow{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#704568}.subtle{color:#675448;font-size:11px}.event-name{margin-bottom:4px;color:#704568;font-size:12px;font-weight:500}.status{padding:13px 15px;background:#eee4eb;border-radius:9px;font-size:12px;margin:17px 0}.status:empty{display:none}fieldset{border:0;border-top:1px solid #d5c5b5;margin:22px 0 0;padding:17px 0 0;min-width:0}legend{font-size:24px;padding:0 10px 0 0}label.field{display:block;font-size:11px;font-weight:500;margin-bottom:13px}input:not([type=checkbox]),select,textarea{display:block;width:100%;border:1px solid #c9b9a8;border-radius:8px;background:#fffdf8;color:#17261f;font:400 16px/1.5 'Work Sans',sans-serif;padding:10px 12px;margin-top:5px;min-height:46px}input::placeholder,textarea::placeholder{color:#85796f;font-size:13px}textarea{resize:vertical;min-height:68px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}.optional{font-weight:400;color:#675448}input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #986c91;outline-offset:3px}label.check{display:flex;gap:10px;align-items:flex-start;font-size:11px;margin:13px 0;cursor:pointer}input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;margin:2px 0 0;accent-color:#3c6147}details{margin:18px 0;font-size:11px}summary{font-weight:600;color:#34533e;cursor:pointer;padding:8px 0}.rules-copy{white-space:pre-line;margin:10px 0;color:#675448}.dates{font-size:11px;margin:10px 0}.privacy{font-size:10px;color:#675448;line-height:1.8}a{color:#34533e;text-underline-offset:3px}button{font:500 14px 'Work Sans',sans-serif;border:0;border-radius:9px;background:#3c6147;color:#fffaf1;padding:16px 20px;min-height:50px;width:100%;cursor:pointer;margin-top:12px}button:hover{background:#2d4c37}button:disabled{opacity:.55;cursor:not-allowed}.button-note{text-align:center;font-size:10px;color:#675448;margin:10px 0 0}.trap{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}.success{padding:20px 0}.success h2{font-size:35px;margin:10px 0}.success-mark{display:inline-block;border:1px solid #3c6147;color:#3c6147;border-radius:50%;padding:5px 14px;font-size:25px}.error{color:#7e3029;background:#fae9e4}#rules-text{overflow-wrap:anywhere}[hidden]{display:none!important}@media(max-width:390px){body{padding:23px 20px}.two-col{gap:10px}h1{font-size:33px}}
+</style>
+</head>
+<body data-event="<?= eventId ?>" data-bridge="<?= bridge ?>">
+<p class="eyebrow">A fresh coat. A happy dog.</p>
+<h1>Enter the drawing</h1>
+<p class="event-name" id="event-name">37th Annual Marge Durham Walk and Dog Fest</p>
+<p class="subtle" id="event-timing">September 27, 2026 · Entries close 3:30 PM · Drawing 5 PM Central</p>
+<p class="subtle">A few details about you and your dog. All fields are required unless marked optional.</p>
+<p id="status" class="status" role="status" aria-live="polite">Loading event details…</p>
+<section id="success" class="success" tabindex="-1" hidden><span class="success-mark" aria-hidden="true">✓</span><h2>You’re on the list.</h2><p id="success-copy"></p><p class="subtle">One entry per person, per event. Submitting again won’t add an extra entry. We’ll contact the winner using the details provided.</p><a href="https://thistleandhoundpetcare.com/" target="_blank" rel="noopener">Get to know Thistle &amp; Hound</a></section>
+<form id="entry-form">
+  <fieldset><legend>About you</legend>
+    <label class="field" for="full-name">Your full name<input id="full-name" name="name" autocomplete="name" required maxlength="100" placeholder="First and last name"></label>
+    <label class="field" for="email">Email address<input id="email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" autocapitalize="none" spellcheck="false" placeholder="you@example.com"></label>
+    <label class="field" for="phone">Mobile number<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" placeholder="(402) 555-0123"><span class="optional">US number. We’ll use your contact details if you win.</span></label>
+    <div class="two-col"><label class="field" for="city">City<input id="city" name="city" autocomplete="address-level2" required maxlength="100"></label><label class="field" for="zip">ZIP code<input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" title="Enter a five-digit ZIP code" required maxlength="10"></label></div>
+  </fieldset>
+  <fieldset><legend>Meet your dog</legend>
+    <label class="field" for="pet-name">Your dog’s name<input id="pet-name" name="petName" required maxlength="80" placeholder="Who’s getting pampered?"></label>
+    <div class="two-col"><label class="field" for="breed">Breed or mix<input id="breed" name="breed" required maxlength="100" placeholder="A guess is fine"></label><label class="field" for="size">Dog’s size<select id="size" name="size" required><option value="">Choose size</option><option value="small">Under 25 lbs</option><option value="medium">25–60 lbs</option><option value="large">Over 60 lbs</option></select></label></div>
+    <label class="field" for="other-pets">Other pets at home <span class="optional">(optional)</span><input id="other-pets" name="otherPets" maxlength="200" placeholder="Names, species, and breeds"></label>
+  </fieldset>
+  <fieldset><legend>Stay in the loop <span class="optional" style="font:400 10px 'Work Sans',sans-serif">(optional)</span></legend>
+    <p class="subtle">A little care in your inbox. These choices don’t affect your chance of winning.</p>
+    <label class="check"><input type="checkbox" name="emailOptIn" id="email-opt-in"><span id="email-consent">Yes, email me Thistle &amp; Hound news, pet-care tips, and offers. I can unsubscribe at any time.</span></label>
+    <label class="check"><input type="checkbox" name="smsOptIn" id="sms-opt-in"><span id="sms-consent">Yes, I agree to receive recurring marketing texts from Thistle &amp; Hound at the number provided, including automated messages. Consent is not required to enter or purchase. Frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</span></label>
+  </fieldset>
+  <details><summary>Drawing details &amp; your privacy</summary><p id="dates" class="dates">Event dates will appear here when registration opens.</p><p id="eligibility"></p><p class="rules-copy" id="rules-text">No purchase necessary. One entry per person, per event. Returning customers may enter each new event. Marketing signup is optional.</p><p class="privacy">Thistle &amp; Hound stores your contact and pet details in a private Google Sheet to manage this drawing, contact the winner, and keep customer records. We use your details for marketing only with your permission. We don’t sell your information. To request a correction, deletion, or to stop marketing, email <a href="mailto:hello@thistleandhoundpetcare.com">hello@thistleandhoundpetcare.com</a> or call <a href="tel:+14028198922">(402) 819-8922</a>.</p></details>
+  <label class="check"><input type="checkbox" name="rulesAccepted" id="rules-accepted" required><span>I meet the event’s eligibility requirements and agree to the drawing details and use of my information described above.</span></label>
+  <div class="trap" aria-hidden="true"><label>Leave blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
+  <p id="error" class="status error" role="alert" tabindex="-1" hidden></p>
+  <button id="submit" type="submit" disabled>Enter to win The Works</button>
+  <p class="button-note">No purchase necessary. Just a chance to treat your dog.</p>
+</form>
+<noscript>Please enable JavaScript to enter or ask us for help at the booth.</noscript>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const form = $('entry-form');
+  const button = $('submit');
+  let event;
+  let busy = false;
+  const api = window.google && window.google.script && window.google.script.run;
+  const bridge = api ? document.body.dataset.bridge : new URLSearchParams(location.search).get('bridge');
+  const resize = () => window.top.postMessage({type:'giveaway-height',bridge,height:document.body.offsetHeight + 8}, '*');
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(document.body);
+  window.addEventListener('load', resize);
+  const date = value => new Date(value).toLocaleString('en-US', {dateStyle:'medium',timeStyle:'short',timeZone:'America/Chicago'}) + ' Central';
+  const fail = message => { $('error').textContent = message; $('error').hidden = false; $('error').focus(); };
+  if (!api) {
+    $('status').textContent = 'Registration is being prepared. Please check back soon, or ask us at the booth.';
+    form.querySelectorAll('input,select').forEach(input => input.disabled = true);
+  } else {
+    const timer = setTimeout(() => { $('status').textContent = 'Event details are taking longer to load. If this continues, reopen the form or ask us at the booth.'; }, 20000);
+    api.withSuccessHandler(result => {
+      clearTimeout(timer);
+      event = result;
+      $('event-name').textContent = result.name || 'Event giveaway';
+      $('event-timing').textContent = result.available ? 'Entries close ' + date(result.closesAt) + '. Drawing ' + date(result.drawAt) + '.' : '';
+      $('status').textContent = result.message || '';
+      if (!result.available) { form.hidden = true; return; }
+      $('email-consent').textContent = result.emailConsent;
+      $('sms-consent').textContent = result.smsConsent;
+      $('eligibility').textContent = result.eligibility;
+      $('dates').textContent = 'Entries close ' + date(result.closesAt) + '. Winner drawn ' + date(result.drawAt) + '.';
+      $('rules-text').textContent = result.rules;
+      button.disabled = false;
+    }).withFailureHandler(() => {
+      clearTimeout(timer);
+      $('status').textContent = 'We couldn’t load this drawing. Please reload the page, or ask us at the booth.';
+      form.hidden = true;
+    }).getEvent(document.body.dataset.event);
+  }
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!event || !event.available || busy || !form.reportValidity()) return;
+    const payload = Object.fromEntries(new FormData(form));
+    const digits = payload.phone.replace(/\D/g, '');
+    if (!/^(1)?[2-9][0-9]{2}[2-9][0-9]{6}$/.test(digits)) { fail('Please enter a valid US mobile number, including the area code.'); $('phone').focus(); return; }
+    payload.eventId = event.id;
+    payload.token = event.token;
+    payload.emailOptIn = $('email-opt-in').checked;
+    payload.smsOptIn = $('sms-opt-in').checked;
+    payload.rulesAccepted = $('rules-accepted').checked;
+    busy = true; button.disabled = true; button.textContent = 'Saving your entry…'; form.setAttribute('aria-busy','true'); $('error').hidden = true;
+    const timer = setTimeout(() => {
+      fail('This is taking longer than expected. Please wait a moment. If you need to reload and try again, we’ll still count only one entry.');
+    }, 25000);
+    api.withSuccessHandler(result => {
+      clearTimeout(timer); busy = false; form.removeAttribute('aria-busy');
+      if (!result || !result.ok) { button.disabled = false; button.textContent = 'Enter to win The Works'; fail(result && result.message || 'We couldn’t confirm your entry. Please try again.'); return; }
+      form.hidden = true; $('status').hidden = true;
+      $('success-copy').textContent = 'Your entry for ' + event.name + ' is recorded. Thank you for stopping by.';
+      $('success').hidden = false; $('success').focus();
+    }).withFailureHandler(() => {
+      clearTimeout(timer); busy = false; form.removeAttribute('aria-busy'); button.disabled = false; button.textContent = 'Try again';
+      fail('We couldn’t confirm your entry. Please try again, or ask us at the booth. Your details are still here, and retries won’t create extra entries.');
+    }).submitEntry(payload);
+  });
+})();
+</script>
+</body>
+</html>
