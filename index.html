@@ -90,11 +90,12 @@ h1{font-family:var(--font-display);font-weight:500;font-size:clamp(34px,9vw,44px
 .social-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%}
 .social-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:var(--radius-pill);background:var(--color-surface);border:1px solid var(--color-border);font:500 14px/1 var(--font-body);color:var(--color-text-soft);text-decoration:none}
 .social-pill svg{width:16px;height:16px;color:var(--color-text-soft)}
-.social-pill .soon{font:500 10px/1 var(--font-body);letter-spacing:0.06em;text-transform:uppercase;color:var(--plum-600);background:var(--color-accent-soft);padding:3px 7px;border-radius:var(--radius-pill)}
 
-.social-pill-frame{--angle:0deg;position:relative;display:inline-flex;isolation:isolate;padding:2px;border-radius:var(--radius-pill);text-decoration:none;background:conic-gradient(from var(--angle),var(--color-primary) 0deg,var(--color-accent) 10deg,transparent 55deg,transparent 360deg),var(--color-border);animation:pill-orbit 5s linear infinite}
-.social-pill-frame::before{content:'';position:absolute;inset:-5px;z-index:-1;border-radius:inherit;background:conic-gradient(from var(--angle),var(--color-primary) 0deg,var(--color-accent) 10deg,transparent 55deg,transparent 360deg);filter:blur(9px) saturate(1.3);opacity:0.7}
+.social-pill-frame{--angle:0deg;position:relative;display:inline-flex;isolation:isolate;padding:2px;border-radius:var(--radius-pill);text-decoration:none;background:conic-gradient(from var(--angle),var(--glow-color) 0deg,var(--glow-color-soft) 10deg,transparent 55deg,transparent 360deg),var(--color-border)}
+.social-pill-frame::before{content:'';position:absolute;inset:-5px;z-index:-1;border-radius:inherit;background:conic-gradient(from var(--angle),var(--glow-color) 0deg,var(--glow-color-soft) 10deg,transparent 55deg,transparent 360deg);filter:blur(9px) saturate(1.3);opacity:0.7}
 .social-pill-frame .social-pill{border-color:transparent}
+.social-pill-frame--facebook{--glow-color:#1877f2;--glow-color-soft:#7db2ff;animation:pill-orbit 5s linear infinite}
+.social-pill-frame--instagram{--glow-color:#e4405f;--glow-color-soft:#f8b23c;animation:pill-orbit 6.7s linear infinite}
 @keyframes pill-orbit{to{--angle:360deg}}
 @media (prefers-reduced-motion:reduce){.social-pill-frame{animation:none}}
 
@@ -122,11 +123,6 @@ h1{font-family:var(--font-display);font-weight:500;font-size:clamp(34px,9vw,44px
 .bundle-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
 .bundle-price{font:600 15px/1 var(--font-body);color:var(--color-text)}
 .bundle-save{font:500 11px/1 var(--font-body);color:var(--green-700);background:var(--green-100);padding:3px 8px;border-radius:var(--radius-pill)}
-
-.instagram{width:100%;display:flex;flex-direction:column;gap:16px}
-.instagram h2{font-family:var(--font-display);font-weight:500;font-size:26px;margin:0;text-align:center;color:var(--ink)}
-.instagram-embed{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
-.instagram-embed iframe{display:block;width:100%;border:0}
 
 footer{text-align:center;display:flex;flex-direction:column;gap:6px}
 footer p{margin:0;font-size:13px;line-height:1.5;color:var(--sand-700)}
@@ -165,20 +161,18 @@ Preferred — book online
 hello@thistleandhoundpetcare.com
 </a>
 <div class="social-row">
+<a class="social-pill-frame social-pill-frame--instagram" href="https://www.instagram.com/thistleandhound/" target="_blank" rel="noopener">
 <span class="social-pill">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37a4 4 0 1 1-7.914 1.174A4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-Instagram <span class="soon">Coming soon</span>
+Instagram
 </span>
-<a class="social-pill-frame" href="https://www.facebook.com/share/1BdbbrEBUA/?mibextid=wwXIfr" target="_blank" rel="noopener">
+</a>
+<a class="social-pill-frame social-pill-frame--facebook" href="https://www.facebook.com/share/1BdbbrEBUA/?mibextid=wwXIfr" target="_blank" rel="noopener">
 <span class="social-pill">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
 Facebook
 </span>
 </a>
-<span class="social-pill">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-TikTok <span class="soon">Coming soon</span>
-</span>
 </div>
 </nav>
 
@@ -253,21 +247,11 @@ TikTok <span class="soon">Coming soon</span>
 
 <hr class="divider">
 
-<section class="instagram">
-<h2>Latest from Instagram</h2>
-<div class="instagram-embed">
-<iframe onload="iFrameSetup(this)" src="https://app.mirror-app.com/feed-instagram/258868ca-ed72-4110-ad04-28e243bb4508/preview" style="width:100%;border:none;overflow:hidden;" scrolling="no"></iframe>
-</div>
-</section>
-
-<hr class="divider">
-
 <footer>
 <p>Calm, one-on-one grooming for dogs and cats, in your own home.</p>
 <p class="copyright">© 2026 Thistle &amp; Hound Mobile Pet Care</p>
 </footer>
 
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@mirrorapp/iframe-bridge@latest/dist/index.umd.js"></script>
 </body>
 </html>
