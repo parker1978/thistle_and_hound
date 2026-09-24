@@ -1,0 +1,11 @@
+# Cloudflare Pages project settings. The site is static; functions/ adds the giveaway API.
+name = "thistle-and-hound"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "thistle-giveaway"
+# Replace with the ID printed by: npx wrangler d1 create thistle-giveaway
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"

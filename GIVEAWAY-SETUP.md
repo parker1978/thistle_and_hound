@@ -1,66 +1,131 @@
 # Thistle & Hound event giveaway
 
-The registration form is deployed and connected to the private spreadsheet. The website page is configured for this deployment. Live tests verified a new customer, a duplicate submission, and the same customer entering a second event. Test records were removed. The local static preview is for design review only.
+The giveaway runs on **Cloudflare Pages** with a **Cloudflare D1** database. Three parts work together:
+
+| Part | URL | Who uses it |
+| --- | --- | --- |
+| Registration page | `/giveaway/?event=EVENT-ID` | Visitors (the QR code points here) |
+| Giveaway API | `/api/giveaway/*` (public) and `/api/admin/*` (staff key required) | The two pages |
+| Winner drawing | `/giveaway/draw/` | Staff, screen-recorded for social media |
+
+The Google Sheet and Apps Script are no longer used once this is live. `scripts/import-google-sheet.mjs` moves the entries already collected there into D1.
 
 ## This event
 
 - 37th Annual Marge Durham Walk and Dog Fest
 - Event ID: `marge-durham-dog-fest-2026`
-- Entries close Sunday, September 27, 2026 at 3:30 PM America/Chicago (Central Daylight Time).
-- Winner drawn that day at 5:00 PM Central. This software does not select or contact the winner automatically.
-- Prize: one free **The Works** deluxe grooming package for one dog, worth over $200 depending on size. Bath, blow dry, nails, teeth and ears, plus anal gland expression, sanitary shave and paw shave if needed.
-- Entry URL after publishing: `https://thistleandhoundpetcare.com/giveaway/?event=marge-durham-dog-fest-2026`
+- Entries close Sunday, September 27, 2026 at 3:30 PM Central. Winner drawn that day at 5:00 PM Central.
+- Prize: one free **The Works** deluxe grooming package for one dog, worth over $200 depending on size.
+- Entry URL: `https://thistleandhoundpetcare.com/giveaway/?event=marge-durham-dog-fest-2026`
 
-## Current Google resources
+## One-time Cloudflare setup
 
-- Private registrations sheet: https://docs.google.com/spreadsheets/d/1cSsDUJ1EHrfYpnTLYf45qDgPlczCehSzUwdrOjSUpgc/edit
-- Apps Script project: https://script.google.com/home/projects/1FK7XGmIafA0sn3HbGGFsYBNkeME1NkdWZr6Ro68BoMbUHvCtxTygGnvm/edit
-- Public form deployment: https://script.google.com/macros/s/AKfycbxVrwcLWcQ_Y1BLmDWXv49e0m1-4WPqyn_i7bbFidLO33-QmVTItkxLDzw4VPY7Ecc8yA/exec (version 2)
-- The event row, September 27 closing/drawing times, Chicago timezone, and private sharing have been verified.
+You need Node 18+ and the Cloudflare account that hosts the site. Run these from the repository folder.
 
-## Connect Google once
+1. **Sign in:** `npx wrangler login`
+2. **Create the database:** `npx wrangler d1 create thistle-giveaway`. Copy the printed `database_id` into `wrangler.toml`, replacing `REPLACE_WITH_D1_DATABASE_ID`. Set `name` in `wrangler.toml` to your Pages project's name if it isn't `thistle-and-hound`. **Do this before merging:** Cloudflare Pages reads this file on every deploy.
+3. **Create the tables and this event:** `npx wrangler d1 migrations apply thistle-giveaway --remote`
+4. **Add two secrets** under Pages project → Settings → Variables and Secrets, for Production (and Preview if you test there). You can also add them with `npx wrangler pages secret put NAME --project-name thistle-and-hound`.
+   - `TOKEN_SECRET`: signs entry forms. Use a long random value, for example `openssl rand -base64 48`.
+   - `ADMIN_KEY`: the staff key for the drawing page and CSV export, at least 16 characters, for example `openssl rand -base64 24`. Keep it in a password manager and share it only with staff.
+5. **Hosting:** the site must be served by Cloudflare Pages so `functions/` runs. In the Pages project, choose Git integration with no framework preset, an empty build command, and `/` as the output directory. If the site is currently on another host, point the domain at the Pages project.
+6. **Deploy** by merging to the production branch. Open `/giveaway/` and confirm the form loads the event details. Then open `/giveaway/draw/`, sign in with `ADMIN_KEY`, and confirm the entry count.
 
-1. Open the existing Apps Script project linked above while signed into parker1978@gmail.com.
-2. Name it **Thistle & Hound — Giveaway registrations**. Copy `google-apps-script/Code.gs` into the project's Code.gs. Add an HTML file named **Form** and copy `google-apps-script/Form.html` into it.
-3. In Project Settings, show the `appsscript.json` manifest, and replace it with the supplied `google-apps-script/appsscript.json`. It uses the Chicago time zone and only the Google Sheets permission.
-4. Setup is already complete for this project. For a new installation, temporarily add `function initializeGiveaway() { return setupGiveaway_(); }`, run **initializeGiveaway**, then remove that wrapper and save before deployment. The editor hides functions ending in an underscore from its Run menu. The account owner must authorize Google Sheets access. It connects to the private spreadsheet already created, checks its tables, initializes the form signing secret, and prints the spreadsheet URL in the execution log. Run this setup only from the editor; the trailing underscore prevents visitors from calling it. Do not remove that underscore.
-5. Open the spreadsheet. Review the **Events** row, especially eligibility and rules. No age or geographic restriction was supplied, so none has been invented. Add any applicable service-area limits before launch. Status is `open`, with an opening date of September 21 and automatic closing at the configured deadline. Change status to `paused` to stop entries at any time. Keep the spreadsheet's sharing set to **Restricted**.
-6. Deploy the script as a **Web app**, executing as **Me** (the owner), with access for **Anyone**. This exposes only the public entry form and its two narrow registration functions; it does not publish the spreadsheet. If your Google account does not allow anonymous web apps, use an account that does or arrange another form backend. Do not set execution to the visiting user: visitors should not have to sign in.
-7. Copy the deployment URL ending in `/exec` into `formUrl` in `giveaway/config.js`. Keep the default event ID as supplied. No spreadsheet ID, secret, or Google credential goes into the public website.
-8. Publish the repository through your existing website workflow. The new route is `/giveaway/`; the home page is unchanged. This page needs no build system or server on your web host.
-9. Before printing the QR: open the public URL in a signed-out/private browser and on a real phone. Submit a clearly labeled test entry using contact details you control. Confirm one Customers row and one Entries row; submit the same details again and confirm no extra row. Remove that test entry before the drawing. Confirm the rules and times displayed, and that your anonymous Google deployment works. The actual Google deployment and real Google Sheet writes cannot be verified by local tests.
+Optional hardening: put `/giveaway/draw/*` and `/api/admin/*` behind **Cloudflare Access** (Zero Trust → Access → Applications) so staff also sign in with email. The staff key still applies.
 
-Editing Apps Script code requires creating a new version under **Manage deployments → Edit**, retaining the existing deployment URL. Changes to Events rows are read immediately and do not require a code deployment.
+## Switching over from the Google Sheet (before Sunday)
 
-## Customer records and entries
+Entries are already arriving in the Google Sheet. To move them without losing anyone:
 
-**Customers** stores one canonical contact record and a generated customer ID. Email is trimmed/lowercased; common US phone formats normalize to `+1…`. A matching email or phone finds an existing record. If the other contact field conflicts, the form asks the visitor to use their earlier details or get staff help. It does not silently merge people or overwrite someone else's contact information. Shared household contacts may need staff assistance. A person changing both email and phone cannot be reliably deduplicated without identity verification; this flow does not perform email/SMS verification.
+1. Deploy the new site (setup steps above). New entries now go to D1.
+2. In the spreadsheet, download the **Customers** and **Entries** tabs with File → Download → Comma-separated values. Each download exports only the current tab.
+3. Convert them and load them into D1:
+   ```sh
+   node scripts/import-google-sheet.mjs Customers.csv Entries.csv > sheet-import.local.sql
+   npx wrangler d1 execute thistle-giveaway --remote --file=sheet-import.local.sql
+   ```
+4. In Apps Script, go to **Deploy → Manage deployments** and archive the web app so the old form stops accepting entries.
+5. Download both tabs again and repeat step 3 to catch anyone who entered during the switch. The import skips records that already exist, so it's safe to run more than once.
+6. Delete the CSV and `.local.sql` files, which contain customer contact details. Keep the spreadsheet private, or delete it once you've confirmed the counts on the drawing page.
 
-**Entries** stores one row per customer per event, including dog details, event name/ID, entry time, marketing choices, and the exact consent/rules text. A returning customer can enter each new event. Repeat submissions for the same event return the same confirmation without creating another entry or changing earlier choices. Use customer_id to connect entries to contact details. Pet details remain with the event entry so earlier registrations remain intact; there is no duplicate customer list per event.
+Someone who entered through the old form and tries again is recognized as a returning customer, and no second entry is created.
 
-**Events** controls name, opening/closing/drawing times, eligibility, rules, and open/paused status. Keep header names and order unchanged. Event IDs are permanent lowercase letters, numbers, and hyphens. Times should be ISO 8601 text with a timezone offset, for example `2026-09-27T15:30:00-05:00`. Do not rename IDs after accepting entries. Rules/date changes invalidate already-open forms so visitors must reload and agree to the updated terms.
+## Drawing the winner
 
-The server serializes submissions with a lock, rechecks closing time after acquiring it, and recovers from interrupted writes without adding duplicate entries. It escapes user-entered spreadsheet formulas. No public function returns customer information. All owner/helper functions have private names ending in `_`. The public app has no email-sending, texting, spreadsheet-reading export, or drawing-selection endpoint.
+Open `https://thistleandhoundpetcare.com/giveaway/draw/` on a laptop, sign in with the staff key, and choose the event.
 
-## Marketing choices
+- **Practice round** is switched on automatically until entries close. Practice draws use real entrants but are never recorded, and they show a "Practice round" badge. Use them to rehearse the recording.
+- After entries close, switch practice off for the **official draw**. The server picks the winner with a cryptographically secure random choice from eligible entries and records it permanently. Each official draw removes that entry from the pool, so **Draw another** picks an alternate if the first winner can't be reached.
+- To try the page without signing in, use `/giveaway/draw/?demo`. It uses sample dogs and never touches real data.
 
-Email and SMS choices are separate, unchecked, and optional. Entry is allowed with neither selected. The Entries table holds the audit trail with timestamp, event and exact consent wording. Customers has first opt-in dates as a convenient summary. A later unchecked box does not revoke a prior subscription, and a duplicate entry does not update preferences.
+The animation starts with every entrant as a floating name tag. Pressing **Fetch a winner** sweeps the tags into a vortex. Next comes a 3-2-1 bouncing tennis-ball countdown with a drumroll, then a slot-style reel of names that slows to a stop. The reveal is a swinging gold dog tag with the winner's name, confetti made of paws, bones and hearts, a fanfare, and a happy dog mascot.
 
-Record an unsubscribe by setting `email_suppressed` or `sms_suppressed` to `yes` on the customer. The form never clears these suppression columns. Only use contacts with the corresponding opt-in date and an empty suppression column, and carry over your email/text provider's unsubscribe list. Keep provider-side suppression authoritative. Collecting a number does not verify ownership. This stores signup requests; it does not enroll people in a provider or send messages. Use an email/SMS provider that handles confirmation, unsubscribe links, and STOP/HELP responses before sending campaigns.
+Recording tips:
+- Press **F** for full screen, then **H** to hide the controls. Press H again, or click the logo, to bring them back. The controls also fade out on their own when the mouse is still, and they are always hidden while a draw runs.
+- **Space** or **Enter** starts a draw. On the winner screen it returns to the start. **M** toggles sound.
+- The page works at any size. A narrow browser window gives a vertical 9:16 layout for Reels, TikTok, and Stories.
+- The screen shows only the dog's name and the owner's first name and last initial. Contact details appear only in **Winner details**, a staff panel. Close it before recording.
+- Sound is generated in the browser. Turn on system-audio capture in your screen recorder if you want it in the video.
+
+## Database tables
+
+- **events**: name, opening, closing and drawing times, eligibility, rules, and `status` (`open` accepts entries; anything else, such as `paused`, stops them). Times are ISO 8601 text with an offset, for example `2026-09-27T15:30:00-05:00`.
+- **customers**: one record per person across all events. Email is trimmed and lowercased. Phone numbers are normalized to `+1XXXXXXXXXX`. Both are unique. Also stores first opt-in dates and the `email_suppressed` and `sms_suppressed` flags.
+- **entries**: one per customer per event, with dog details, marketing choices, the exact consent and rules wording shown, and an `eligible` flag.
+- **draws**: official winner selections in order, with the pool size at the time.
+
+Run staff changes with `npx wrangler d1 execute thistle-giveaway --remote --command "…"`, or in the Cloudflare dashboard under D1 → thistle-giveaway → Console:
+
+```sql
+-- Add the next event (IDs are permanent: lowercase letters, numbers and hyphens)
+INSERT INTO events (id, name, opens_at, closes_at, draw_at, eligibility, rules, status)
+SELECT 'spring-fair-2027', 'Spring Pet Fair 2027', '2027-04-01T00:00:00-05:00', '2027-04-18T15:00:00-05:00', '2027-04-18T16:00:00-05:00', eligibility, rules, 'open'
+FROM events WHERE id = 'marge-durham-dog-fest-2026';
+
+-- Pause or reopen entries
+UPDATE events SET status = 'paused' WHERE id = 'marge-durham-dog-fest-2026';
+
+-- Remove a test or ineligible entry from drawings (the record is kept)
+UPDATE entries SET eligible = 0 WHERE id = 'ENTRY-ID';
+
+-- Record an unsubscribe
+UPDATE customers SET email_suppressed = 1 WHERE email = 'person@example.com';
+```
+
+Changing an event's rules or dates makes forms that are already open ask the visitor to reload and agree to the new wording.
+
+To export entries, use **Export CSV** on the drawing page. It includes contact details, marketing choices, suppression flags, and any draw time. Values that spreadsheet apps could run as formulas, including `+1…` phone numbers, get a leading apostrophe.
 
 ## Reuse at the next event
 
-Add another Events row with a new event ID, name, dates, eligibility, rules and status. Keep the existing Customers and Entries tabs. Make that event's QR point to:
+Add an events row (see above). Then point that event's QR code at `https://thistleandhoundpetcare.com/giveaway/?event=YOUR-NEW-EVENT-ID`. Update `defaultEvent` in `giveaway/config.js` if a plain `/giveaway/` visit, and the drawing page's default, should use the new event. Old QR links stay tied to their own drawing and show "closed" after their deadline. The prize panel on the page is The Works. Edit `giveaway/index.html` and the event rules if the prize changes.
 
-`https://thistleandhoundpetcare.com/giveaway/?event=YOUR-NEW-EVENT-ID`
+## Customer records, consent and privacy
 
-The page reads the event ID from its URL, and the form reads its event details from the private spreadsheet. Update `defaultEvent` in `giveaway/config.js` if a plain `/giveaway/` visit should use the new event. Old event QR links stay attached to their own drawing and show closed after their deadline. This version reuses **The Works** prize; edit the prize page and event rules if the prize changes.
+The deduplication and consent rules are the same as before:
 
-## Files and verification
+- A matching email or phone finds an existing customer. If the other field doesn't match, the visitor is asked to use their earlier details or get help at the booth. People are never merged silently, and contact details are never overwritten.
+- Repeat submissions for the same event return the same confirmation without a second entry and without changing earlier choices.
+- Email and SMS choices are separate, unchecked, and optional. The first opt-in date is kept. A later unchecked box doesn't revoke an earlier opt-in, and the form never clears suppression flags. Only contact people who have the matching opt-in date and no suppression flag. Keep your email and SMS provider's unsubscribe list authoritative, and use a provider that handles confirmation, STOP/HELP, and unsubscribe links.
+- The public API never returns customer information. Staff routes require the `ADMIN_KEY` bearer token. The server checks the closing time, validates every field, rejects the honeypot field, and requires a signed form token that is at least one second old, less than four hours old, and tied to the exact rules shown. This is basic bot protection, not a CAPTCHA.
 
-- `giveaway/`: static branded landing page and public form URL configuration.
-- `google-apps-script/`: backend and hosted entry form. Copy these files into Apps Script.
-- `giveaway/marge-durham-2026-qr.png` and `.svg`: printable event QR assets. They point to the final website URL, which must be live before use.
-- `tests/giveaway.test.cjs`: run `node --test tests/giveaway.test.cjs` (Node 18+). Sixteen tests cover normalization, per-event uniqueness, contacts that conflict, consent, expiry, malicious cell values, retry recovery and privacy.
+## Local development and tests
 
-The integration uses Google's supported [HTML-service RPC](https://developers.google.com/apps-script/guides/html/communication) and [web-app deployment](https://developers.google.com/apps-script/guides/web). It uses an embedded Google-hosted form instead of relying on cross-origin submission tricks. A prominent direct-form button is available while the embedded form loads or if a phone blocks embedding. Basic bot checks are a honeypot and a short-lived signed form token; this is not a CAPTCHA or a high-volume abuse prevention system. Google account quotas apply. Verify the live anonymous deployment before the event.
+```sh
+printf 'TOKEN_SECRET=%s\nADMIN_KEY=local-staff-key-123456\n' "$(openssl rand -hex 32)" > .dev.vars
+npx wrangler d1 migrations apply thistle-giveaway --local
+npx wrangler pages dev .          # http://localhost:8788/giveaway/ and /giveaway/draw/
+node --test tests/giveaway.test.mjs   # Node 22.5+; uses Node's built-in SQLite as a stand-in for D1
+```
+
+`.dev.vars`, `.wrangler/`, and `*.local.sql` files are git-ignored.
+
+## Files
+
+- `giveaway/`: registration page (`index.html`, `giveaway.js`, `giveaway.css`, `config.js`) and printable QR codes.
+- `giveaway/draw/`: winner drawing page.
+- `functions/api/`: Cloudflare Pages Functions routes. They call `server/giveaway.js`, which holds all the logic.
+- `migrations/`: D1 schema and the current event.
+- `scripts/import-google-sheet.mjs`: one-time import from the old spreadsheet.
+- `tests/`: 20 tests covering normalization, per-event uniqueness, conflicting contacts, consent, deadlines, tokens, retry safety, staff authorization, fair and non-repeating draws, CSV safety, and the sheet import.
+- `wrangler.toml`, `_headers`: Cloudflare configuration.

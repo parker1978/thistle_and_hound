@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../design-system/tokens/colors.css">
-  <link rel="stylesheet" href="giveaway.css?v=20260921-2">
-  <script src="config.js?v=20260921-2" defer></script>
-  <script src="giveaway.js?v=20260921-2" defer></script>
+  <link rel="stylesheet" href="giveaway.css?v=20260924-1">
+  <script src="config.js?v=20260924-1" defer></script>
+  <script src="giveaway.js?v=20260924-1" defer></script>
 </head>
 <body>
   <a class="skip" href="#enter">Skip to entry form</a>
@@ -31,11 +31,41 @@
         <p class="prize-note">One free package for one dog. Services are tailored to your dog’s needs and comfort.</p>
         <div class="care-note"><span aria-hidden="true">⌂</span><p><strong>Kind care, at home.</strong><br>One-on-one attention. Zero car rides.</p></div>
       </section>
-      <section class="entry-card" id="enter" aria-label="Giveaway entry">
-        <div id="form-loading" class="form-loading" hidden><p class="eyebrow">One lucky dog. One easy entry.</p><h2>Enter the drawing</h2><p id="loading-copy" role="status">Loading your entry form…</p><a id="open-form" class="open-form">Open the entry form</a><p class="loading-note">If the form doesn’t appear here, open it directly to enter.</p></div>
-        <iframe id="entry-frame" title="Enter the Thistle and Hound giveaway" src="../google-apps-script/Form.html" height="1390"></iframe>
-        <p class="frame-help" id="frame-help" hidden>Form not loading? <a id="direct-link" target="_blank" rel="noopener">Open the entry form</a>.</p>
-        <noscript><p>Please enable JavaScript to enter, or ask us for help at the booth.</p></noscript>
+      <section class="entry-card" id="enter" aria-labelledby="entry-title">
+        <div class="entry">
+          <p class="eyebrow">A fresh coat. A happy dog.</p>
+          <h2 id="entry-title">Enter the drawing</h2>
+          <p class="event-name" id="event-name">37th Annual Marge Durham Walk and Dog Fest</p>
+          <p class="subtle" id="event-timing">September 27, 2026 · Entries close 3:30 PM · Drawing 5 PM Central</p>
+          <p class="subtle">A few details about you and your dog. All fields are required unless marked optional.</p>
+          <p id="status" class="status" role="status" aria-live="polite">Loading event details…</p>
+          <section id="success" class="success" tabindex="-1" hidden><span class="success-mark" aria-hidden="true">✓</span><h3>You’re on the list.</h3><p id="success-copy"></p><p class="subtle">One entry per person, per event. Submitting again won’t add an extra entry. We’ll contact the winner using the details provided.</p><a href="../">Get to know Thistle &amp; Hound</a></section>
+          <form id="entry-form" novalidate hidden>
+            <fieldset><legend>About you</legend>
+              <label class="field" for="full-name">Your full name<input id="full-name" name="name" autocomplete="name" required maxlength="100" placeholder="First and last name"></label>
+              <label class="field" for="email">Email address<input id="email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" autocapitalize="none" spellcheck="false" placeholder="you@example.com"></label>
+              <label class="field" for="phone">Mobile number<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" placeholder="(402) 555-0123"><span class="optional">US number. We’ll use your contact details if you win.</span></label>
+              <div class="two-col"><label class="field" for="city">City<input id="city" name="city" autocomplete="address-level2" required maxlength="100"></label><label class="field" for="zip">ZIP code<input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" title="Enter a five-digit ZIP code" required maxlength="10"></label></div>
+            </fieldset>
+            <fieldset><legend>Meet your dog</legend>
+              <label class="field" for="pet-name">Your dog’s name<input id="pet-name" name="petName" required maxlength="80" placeholder="Who’s getting pampered?"></label>
+              <div class="two-col"><label class="field" for="breed">Breed or mix<input id="breed" name="breed" required maxlength="100" placeholder="A guess is fine"></label><label class="field" for="size">Dog’s size<select id="size" name="size" required><option value="">Choose size</option><option value="small">Under 25 lbs</option><option value="medium">25–60 lbs</option><option value="large">Over 60 lbs</option></select></label></div>
+              <label class="field" for="other-pets">Other pets at home <span class="optional">(optional)</span><input id="other-pets" name="otherPets" maxlength="200" placeholder="Names, species, and breeds"></label>
+            </fieldset>
+            <fieldset><legend>Stay in the loop <span class="optional">(optional)</span></legend>
+              <p class="subtle">A little care in your inbox. These choices don’t affect your chance of winning.</p>
+              <label class="check"><input type="checkbox" name="emailOptIn" id="email-opt-in"><span id="email-consent"></span></label>
+              <label class="check"><input type="checkbox" name="smsOptIn" id="sms-opt-in"><span id="sms-consent"></span></label>
+            </fieldset>
+            <details><summary>Drawing details &amp; your privacy</summary><p id="dates" class="dates"></p><p id="eligibility"></p><p class="rules-copy" id="rules-text"></p><p class="privacy">Thistle &amp; Hound stores your contact and pet details in a private database to manage this drawing, contact the winner, and keep customer records. If you win, only your first name, last initial, and dog’s name may appear in our drawing video. We use your details for marketing only with your permission. We don’t sell your information. To request a correction, deletion, or to stop marketing, email <a href="mailto:hello@thistleandhoundpetcare.com">hello@thistleandhoundpetcare.com</a> or call <a href="tel:+14028198922">(402) 819-8922</a>.</p></details>
+            <label class="check"><input type="checkbox" name="rulesAccepted" id="rules-accepted" required><span>I meet the event’s eligibility requirements and agree to the drawing details and use of my information described above.</span></label>
+            <div class="trap" aria-hidden="true"><label>Leave blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
+            <p id="error" class="status error" role="alert" tabindex="-1" hidden></p>
+            <button id="submit" type="submit" disabled>Enter to win The Works</button>
+            <p class="button-note">No purchase necessary. Just a chance to treat your dog.</p>
+          </form>
+          <noscript><p class="status">Please enable JavaScript to enter, or ask us for help at the booth.</p></noscript>
+        </div>
       </section>
     </div>
     <section class="how-it-works" aria-label="How the drawing works"><div><span>01</span><h3>Say hello.</h3><p>Tell us a little about you and your dog.</p></div><div><span>02</span><h3>You’re in the drawing.</h3><p>One entry per person, per event. Returning visitors are welcome.</p></div><div><span>03</span><h3>We’ll be in touch.</h3><p>If you win, we’ll contact you to arrange your dog’s visit.</p></div></section>
