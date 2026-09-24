@@ -1,7 +1,13 @@
-# Cloudflare Pages project settings. The site is static; functions/ adds the giveaway API.
+# Cloudflare Worker settings. The Worker serves the static site from this folder and runs
+# the giveaway API (server/worker.js) for /api/* requests.
 name = "thistle-and-hound"
+main = "server/worker.js"
 compatibility_date = "2026-09-01"
-pages_build_output_dir = "."
+
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"

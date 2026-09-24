@@ -1,6 +1,6 @@
 # Thistle & Hound event giveaway
 
-The giveaway runs on **Cloudflare Pages** with a **Cloudflare D1** database. Three parts work together:
+The giveaway runs on a **Cloudflare Worker** (static site plus a small API) with a **Cloudflare D1** database. Three parts work together:
 
 | Part | URL | Who uses it |
 | --- | --- | --- |
@@ -20,16 +20,18 @@ The Google Sheet and Apps Script are no longer used once this is live. `scripts/
 
 ## One-time Cloudflare setup
 
-You need Node 18+ and the Cloudflare account that hosts the site. Run these from the repository folder.
+The site is a **Cloudflare Worker with static assets**, deployed from GitHub by Workers Builds. `wrangler.toml` tells Cloudflare to serve this folder as the website and to run `server/worker.js` for `/api/*` requests. `.assetsignore` keeps server code, migrations, scripts and tests from being published.
 
-1. **Sign in:** `npx wrangler login`
-2. **Create the database:** `npx wrangler d1 create thistle-giveaway`. Copy the printed `database_id` into `wrangler.toml`, replacing `REPLACE_WITH_D1_DATABASE_ID`. Set `name` in `wrangler.toml` to your Pages project's name if it isn't `thistle-and-hound`. **Do this before merging:** Cloudflare Pages reads this file on every deploy.
-3. **Create the tables and this event:** `npx wrangler d1 migrations apply thistle-giveaway --remote`
-4. **Add two secrets** under Pages project → Settings → Variables and Secrets, for Production (and Preview if you test there). You can also add them with `npx wrangler pages secret put NAME --project-name thistle-and-hound`.
+1. **Database:** done. `thistle-giveaway` exists and its ID is in `wrangler.toml`.
+2. **Create the tables and this event.** From a copy of this repository, run `npx wrangler d1 migrations apply thistle-giveaway --remote`.
+3. **Check the Worker name.** `name` in `wrangler.toml` must match the Worker's name in the Cloudflare dashboard (Workers & Pages). Otherwise Workers Builds refuses to deploy.
+4. **Deploy** by merging to `main`. After this deploy the Worker has code, so Cloudflare lets it hold secrets.
+5. **Add two secrets** under the Worker → Settings → Variables and Secrets (type: Secret), or with `npx wrangler secret put NAME`:
    - `TOKEN_SECRET`: signs entry forms. Use a long random value, for example `openssl rand -base64 48`.
    - `ADMIN_KEY`: the staff key for the drawing page and CSV export, at least 16 characters, for example `openssl rand -base64 24`. Keep it in a password manager and share it only with staff.
-5. **Hosting:** the site must be served by Cloudflare Pages so `functions/` runs. In the Pages project, choose Git integration with no framework preset, an empty build command, and `/` as the output directory. If the site is currently on another host, point the domain at the Pages project.
-6. **Deploy** by merging to the production branch. Open `/giveaway/` and confirm the form loads the event details. Then open `/giveaway/draw/`, sign in with `ADMIN_KEY`, and confirm the entry count.
+
+   Saving a secret in the dashboard redeploys the Worker. Until both secrets exist, the registration form shows "We couldn't load this drawing."
+6. **Test.** Open `/giveaway/` and confirm the form loads the event details. Then open `/giveaway/draw/`, sign in with `ADMIN_KEY`, and confirm the entry count.
 
 Optional hardening: put `/giveaway/draw/*` and `/api/admin/*` behind **Cloudflare Access** (Zero Trust → Access → Applications) so staff also sign in with email. The staff key still applies.
 
@@ -37,7 +39,7 @@ Optional hardening: put `/giveaway/draw/*` and `/api/admin/*` behind **Cloudflar
 
 Entries are already arriving in the Google Sheet. To move them without losing anyone:
 
-1. Deploy the new site (setup steps above). New entries now go to D1.
+1. Finish the setup steps above. New entries now go to D1.
 2. In the spreadsheet, download the **Customers** and **Entries** tabs with File → Download → Comma-separated values. Each download exports only the current tab.
 3. Convert them and load them into D1:
    ```sh
@@ -113,19 +115,19 @@ The deduplication and consent rules are the same as before:
 
 ```sh
 printf 'TOKEN_SECRET=%s\nADMIN_KEY=local-staff-key-123456\n' "$(openssl rand -hex 32)" > .dev.vars
-npx wrangler d1 migrations apply thistle-giveaway --local
-npx wrangler pages dev .          # http://localhost:8788/giveaway/ and /giveaway/draw/
+npx wrangler d1 migrations apply thistle-giveaway --local --persist-to ../.giveaway-dev-state
+npx wrangler dev --persist-to ../.giveaway-dev-state   # http://localhost:8787/giveaway/ and /giveaway/draw/
 node --test tests/giveaway.test.mjs   # Node 22.5+; uses Node's built-in SQLite as a stand-in for D1
 ```
 
-`.dev.vars`, `.wrangler/`, and `*.local.sql` files are git-ignored.
+Keep the local database outside this folder (`--persist-to`). Wrangler watches the whole site folder, so a local database inside it makes the dev server reload endlessly. `.dev.vars`, `.wrangler/`, and `*.local.sql` files are git-ignored.
 
 ## Files
 
 - `giveaway/`: registration page (`index.html`, `giveaway.js`, `giveaway.css`, `config.js`) and printable QR codes.
 - `giveaway/draw/`: winner drawing page.
-- `functions/api/`: Cloudflare Pages Functions routes. They call `server/giveaway.js`, which holds all the logic.
+- `server/worker.js`: Worker entry point that routes `/api/*` requests. All the giveaway logic is in `server/giveaway.js`.
 - `migrations/`: D1 schema and the current event.
 - `scripts/import-google-sheet.mjs`: one-time import from the old spreadsheet.
 - `tests/`: 20 tests covering normalization, per-event uniqueness, conflicting contacts, consent, deadlines, tokens, retry safety, staff authorization, fair and non-repeating draws, CSV safety, and the sheet import.
-- `wrangler.toml`, `_headers`: Cloudflare configuration.
+- `wrangler.toml`, `.assetsignore`, `_headers`: Cloudflare configuration.
