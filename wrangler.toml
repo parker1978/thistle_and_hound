@@ -1,0 +1,10 @@
+# Cloudflare Pages project settings. The site is static; functions/ adds the giveaway API.
+name = "thistle-and-hound"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "thistle-giveaway"
+database_id = "ac39a49a-ce50-40f2-aaf2-a97046a3a9f5"
+migrations_dir = "migrations"

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>The Great Fetch | Thistle &amp; Hound</title>
+  <link rel="icon" href="../../assets/thistle-and-hound-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../design-system/tokens/colors.css">
+  <link rel="stylesheet" href="draw.css?v=20260924-1">
+  <script src="../config.js?v=20260924-1" defer></script>
+  <script src="draw.js?v=20260924-1" defer></script>
+</head>
+<body class="is-idle">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-paw" viewBox="0 0 64 64"><ellipse cx="32" cy="43" rx="15" ry="13"/><circle cx="13" cy="27" r="7"/><circle cx="24" cy="15" r="7"/><circle cx="40" cy="15" r="7"/><circle cx="51" cy="27" r="7"/></symbol>
+    <symbol id="i-bone" viewBox="0 0 64 32"><rect x="12" y="10" width="40" height="12" rx="6"/><circle cx="12" cy="10" r="8"/><circle cx="12" cy="22" r="8"/><circle cx="52" cy="10" r="8"/><circle cx="52" cy="22" r="8"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 64 64"><path d="M32 56C8 40 4 24 16 14c8-6 14-2 16 4 2-6 8-10 16-4 12 10 8 26-16 42z"/></symbol>
+    <symbol id="i-ball" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#d4e157"/><path d="M9 19c15 7 15 19 0 26M55 19c-15 7-15 19 0 26" stroke="#fffbe8" stroke-width="3.5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="i-thistle" viewBox="0 0 64 64"><path d="M32 62V38M32 50c-6-2-10-6-12-12M32 46c6-2 10-5 12-10" stroke="#8fb58f" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="35" rx="9" ry="8" fill="#6f9a74"/><g stroke="#c58fbf" stroke-width="3.2" stroke-linecap="round"><path d="M32 28V8M32 28l-8-17M32 28l8-17M32 28l-14-12M32 28l14-12M32 28l-17-5M32 28l17-5"/></g></symbol>
+  </svg>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="floaters" id="floaters" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="brand"><span class="brand-mark"><img src="../../design-system/assets/logo/thistle-and-hound-mark-transparent.png" alt="" width="64" height="64"></span><span>Thistle &amp; Hound<small>Mobile pet care</small></span></div>
+    <p class="event-label" id="event-label">&nbsp;</p>
+    <span class="mode-badge" id="mode-badge" hidden>Practice round</span>
+  </header>
+
+  <main class="stage" aria-live="polite">
+    <section class="scene scene-idle" id="scene-idle">
+      <p class="kicker">The Great Fetch</p>
+      <h1>Who’s getting <em>The&nbsp;Works?</em></h1>
+      <div class="tag-cloud" id="tag-cloud" aria-hidden="true"></div>
+      <p class="count"><strong id="count">0</strong> <span id="count-label">pups in the running</span></p>
+      <button class="fetch" id="fetch" type="button"><span>Fetch a winner</span><svg aria-hidden="true"><use href="#i-ball"/></svg></button>
+    </section>
+
+    <section class="scene scene-count" id="scene-count" hidden>
+      <div class="count-ball"><svg aria-hidden="true"><use href="#i-ball"/></svg><span id="count-num">3</span></div>
+      <div class="count-shadow" aria-hidden="true"></div>
+    </section>
+
+    <section class="scene scene-reel" id="scene-reel" hidden>
+      <p class="kicker">Sniffing out a winner…</p>
+      <div class="reel-wrap">
+        <svg class="pointer pointer-left" aria-hidden="true"><use href="#i-paw"/></svg>
+        <div class="reel" id="reel"><div class="reel-track" id="reel-track"></div></div>
+        <svg class="pointer pointer-right" aria-hidden="true"><use href="#i-paw"/></svg>
+      </div>
+    </section>
+
+    <section class="scene scene-win" id="scene-win" hidden>
+      <div class="rays" aria-hidden="true"></div>
+      <p class="kicker">And the winner is…</p>
+      <div class="tag-swing">
+        <div class="ribbon" aria-hidden="true"></div>
+        <div class="medal">
+          <span class="medal-hole" aria-hidden="true"></span>
+          <p class="medal-pet" id="win-pet">Maple</p>
+          <p class="medal-owner" id="win-owner">with Taylor E.</p>
+        </div>
+      </div>
+      <p class="win-line">wins <strong>The Works</strong>, a deluxe grooming package!</p>
+      <p class="win-sub" id="win-sub">Congratulations! We’ll be in touch soon.</p>
+    </section>
+  </main>
+
+  <svg class="dog" id="dog" viewBox="0 0 240 220" aria-hidden="true">
+    <path class="dog-tail" d="M180 152c26-8 36-30 30-56" stroke="#b97a45" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <ellipse cx="142" cy="160" rx="56" ry="40" fill="#d99c63"/>
+    <ellipse cx="136" cy="172" rx="32" ry="22" fill="#f3d9b5"/>
+    <rect x="102" y="170" width="22" height="42" rx="11" fill="#d99c63"/>
+    <rect x="152" y="174" width="22" height="38" rx="11" fill="#c98b52"/>
+    <ellipse cx="113" cy="210" rx="15" ry="8" fill="#f3d9b5"/>
+    <ellipse cx="163" cy="210" rx="15" ry="8" fill="#e8c9a0"/>
+    <path d="M74 140c20 14 46 14 64 0" stroke="#7a3f6e" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <g class="dog-tag-charm"><circle cx="106" cy="157" r="8.5" fill="#e8b64c" stroke="#b8872a" stroke-width="2"/></g>
+    <g class="dog-head">
+      <path class="ear ear-l" d="M64 60C40 64 30 112 48 128c14-12 22-38 26-60z" fill="#8a5a3b"/>
+      <ellipse cx="100" cy="90" rx="48" ry="44" fill="#e0a86d"/>
+      <ellipse cx="119" cy="80" rx="17" ry="15" fill="#c98b52"/>
+      <path class="ear ear-r" d="M136 60c24 4 34 52 16 68-14-12-22-38-26-60z" fill="#8a5a3b"/>
+      <ellipse cx="100" cy="111" rx="27" ry="20" fill="#f6e3c8"/>
+      <g class="eyes"><circle cx="82" cy="83" r="6.5" fill="#1f1a17"/><circle cx="118" cy="83" r="6.5" fill="#1f1a17"/><circle cx="84.5" cy="80.5" r="2.2" fill="#fff"/><circle cx="120.5" cy="80.5" r="2.2" fill="#fff"/></g>
+      <circle cx="70" cy="106" r="6" fill="#e98a8a" opacity=".45"/><circle cx="130" cy="106" r="6" fill="#e98a8a" opacity=".45"/>
+      <path class="dog-tongue" d="M93 118h14v9a7 7 0 0 1-14 0z" fill="#e7788a"/>
+      <ellipse cx="100" cy="101" rx="9.5" ry="6.5" fill="#1f1a17"/>
+      <path d="M100 107v6m0 0c-4 6-10 6-14 1m14-1c4 6 10 6 14 1" stroke="#1f1a17" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <div class="flash" id="flash" aria-hidden="true"></div>
+
+  <button type="button" class="controls-toggle" id="controls-toggle" aria-controls="controls" aria-expanded="false">Controls</button>
+  <nav class="controls" id="controls" aria-label="Drawing controls">
+    <label class="control-event">Event<select id="event-select"></select></label>
+    <label class="switch" title="Practice rounds are never recorded"><input type="checkbox" id="practice"><span class="switch-ui" aria-hidden="true"></span>Practice round</label>
+    <div class="control-buttons">
+      <button type="button" id="again" hidden>Draw another</button>
+      <button type="button" id="reset" hidden>Back to start</button>
+      <button type="button" id="staff-open">Winner details</button>
+      <button type="button" id="export">Export CSV</button>
+      <button type="button" id="sound" aria-pressed="true">Sound on</button>
+      <button type="button" id="fullscreen">Full screen</button>
+      <button type="button" id="hide" title="Press H to show or hide the controls">Hide (H)</button>
+      <button type="button" id="signout">Sign out</button>
+    </div>
+  </nav>
+
+  <aside class="staff" id="staff" hidden aria-labelledby="staff-title">
+    <div class="staff-head"><h2 id="staff-title">Winner details</h2><button type="button" id="staff-close" aria-label="Close winner details">×</button></div>
+    <p class="staff-note">Staff only. Close this panel before recording.</p>
+    <div id="staff-latest"></div>
+    <h3>Official draws for this event</h3>
+    <p class="staff-note" id="staff-empty">No official draws yet.</p>
+    <ol id="staff-history" class="staff-history"></ol>
+  </aside>
+
+  <div class="signin" id="signin" hidden>
+    <form class="signin-card" id="signin-form">
+      <span class="brand-mark big"><img src="../../design-system/assets/logo/thistle-and-hound-mark-transparent.png" alt="" width="96" height="96"></span>
+      <p class="kicker">Staff only</p>
+      <h2>The Great Fetch</h2>
+      <p>Enter the staff key to load this giveaway’s entries.</p>
+      <label for="key">Staff key<input id="key" type="password" autocomplete="current-password" required></label>
+      <p class="signin-error" id="signin-error" role="alert" hidden></p>
+      <button type="submit">Open the drawing</button>
+      <a href="?demo">Try it with sample dogs</a>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>
