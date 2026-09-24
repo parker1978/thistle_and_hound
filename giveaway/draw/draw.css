@@ -33,8 +33,9 @@ button{font:inherit;cursor:pointer}
 .top{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:18px;padding:clamp(14px,2.6vmin,28px) clamp(16px,3.4vmin,40px);z-index:5}
 .brand{display:flex;align-items:center;gap:12px;font:600 clamp(18px,2.6vmin,26px)/1.05 var(--display);letter-spacing:.01em}
 .brand small{display:block;margin-top:4px;font:600 clamp(8px,1.1vmin,10px)/1.2 var(--body);letter-spacing:.2em;text-transform:uppercase;opacity:.75}
-.brand-mark{display:grid;place-items:center;width:clamp(44px,6.4vmin,64px);aspect-ratio:1;border-radius:50%;background:var(--cream);box-shadow:0 0 0 3px color-mix(in oklch,var(--gold) 70%,transparent),0 6px 20px rgba(0,0,0,.25);overflow:hidden}
-.brand-mark img{width:122%;height:122%;object-fit:contain}
+.brand-mark{position:relative;display:block;width:clamp(44px,6.4vmin,64px);aspect-ratio:1;border-radius:50%;background:var(--cream);box-shadow:0 0 0 3px color-mix(in oklch,var(--gold) 70%,transparent),0 6px 20px rgba(0,0,0,.25);overflow:hidden}
+/* Scale with a transform: enlarging past the circle and relying on overflow centering puts it off-center in Safari. The small translate corrects the artwork sitting slightly high in its file. */
+.brand-mark img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform:scale(1.22) translate(-.3%,1.2%)}
 .brand-mark.big{width:96px;margin:0 auto 6px}
 .event-label{margin:0 0 0 auto;text-align:right;font:600 clamp(9px,1.35vmin,12px)/1.4 var(--body);letter-spacing:.18em;text-transform:uppercase;opacity:.85;max-width:44vw}
 .mode-badge{padding:6px 12px;border-radius:99px;background:var(--plum-500);color:var(--plum-50);font:700 clamp(9px,1.2vmin,11px)/1 var(--body);letter-spacing:.14em;text-transform:uppercase;box-shadow:0 0 0 2px color-mix(in oklch,var(--plum-200) 55%,transparent)}
