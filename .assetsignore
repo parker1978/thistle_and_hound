@@ -1,0 +1,14 @@
+# Files that are part of the repository but must not be published as website files.
+.git
+.wrangler
+node_modules
+.dev.vars
+*.local.sql
+.assetsignore
+wrangler.toml
+server
+migrations
+scripts
+tests
+GIVEAWAY-SETUP.md
+.DS_Store
