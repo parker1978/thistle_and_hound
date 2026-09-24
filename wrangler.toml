@@ -6,6 +6,5 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "thistle-giveaway"
-# Replace with the ID printed by: npx wrangler d1 create thistle-giveaway
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "ac39a49a-ce50-40f2-aaf2-a97046a3a9f5"
 migrations_dir = "migrations"
