@@ -309,8 +309,11 @@
       track.appendChild(row);
     }
     await wait(reduced ? 50 : 350);
-    const rowHeight = track.firstElementChild.getBoundingClientRect().height;
-    const target = (landing - 1) * rowHeight;
+    // Layout sizes (offsetHeight/offsetTop) ignore the scene's zoom-in transform, so the winner
+    // lands exactly on the middle of the window whatever its size.
+    const winnerRow = track.children[landing];
+    const rowHeight = winnerRow.offsetHeight;
+    const target = winnerRow.offsetTop + rowHeight / 2 - reel.clientHeight / 2;
     const overshoot = rowHeight * .38;
     const duration = reduced ? 1400 : 6800;
     const pointers = [...document.querySelectorAll('.pointer')];
