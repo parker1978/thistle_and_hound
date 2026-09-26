@@ -12,3 +12,4 @@ scripts
 tests
 GIVEAWAY-SETUP.md
 .DS_Store
+*.dbml

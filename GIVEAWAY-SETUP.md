@@ -127,7 +127,7 @@ Keep the local database outside this folder (`--persist-to`). Wrangler watches t
 - `giveaway/`: registration page (`index.html`, `giveaway.js`, `giveaway.css`, `config.js`) and printable QR codes.
 - `giveaway/draw/`: winner drawing page.
 - `server/worker.js`: Worker entry point that routes `/api/*` requests. All the giveaway logic is in `server/giveaway.js`.
-- `migrations/`: D1 schema and the current event.
+- `migrations/`: D1 schema and the current event. `giveaway-schema.dbml` is the same schema in DBML, for viewing on dbdiagram.io.
 - `scripts/import-google-sheet.mjs`: one-time import from the old spreadsheet.
 - `tests/`: 20 tests covering normalization, per-event uniqueness, conflicting contacts, consent, deadlines, tokens, retry safety, staff authorization, fair and non-repeating draws, CSV safety, and the sheet import.
 - `wrangler.toml`, `.assetsignore`, `_headers`: Cloudflare configuration.
