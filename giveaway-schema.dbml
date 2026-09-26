@@ -1,0 +1,77 @@
+// Thistle & Hound giveaway database (Cloudflare D1: thistle-giveaway).
+// Mirrors migrations/0001_giveaway.sql. Paste into https://dbdiagram.io to view.
+
+Project thistle_giveaway {
+  database_type: 'SQLite'
+  Note: 'Thistle & Hound giveaway database (Cloudflare D1: thistle-giveaway)'
+}
+
+Table events {
+  id text [pk, note: 'Permanent slug: lowercase letters, numbers, hyphens; 1-80 chars, cannot start with a hyphen']
+  name text [not null]
+  opens_at text [not null, note: 'ISO 8601 with offset, e.g. 2026-09-21T00:00:00-05:00']
+  closes_at text [not null]
+  draw_at text [not null]
+  eligibility text [not null]
+  rules text [not null]
+  status text [not null, default: 'open', note: "'open' accepts entries; anything else (e.g. 'paused') stops them"]
+  created_at text [not null, default: `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`]
+
+  Note: 'One row per giveaway event'
+}
+
+Table customers {
+  id text [pk, note: 'UUID']
+  created_at text [not null]
+  name text [not null]
+  email text [not null, unique, note: 'Trimmed and lowercased']
+  phone text [not null, unique, note: '+1XXXXXXXXXX']
+  city text [not null]
+  zip text [not null]
+  email_opt_in_at text [null, note: 'First email opt-in; never cleared by the form']
+  sms_opt_in_at text [null, note: 'First SMS opt-in; never cleared by the form']
+  email_suppressed integer [not null, default: 0, note: 'Staff set 1 to record an unsubscribe']
+  sms_suppressed integer [not null, default: 0, note: 'Staff set 1 to record an unsubscribe']
+
+  Note: 'One canonical contact record per person, shared across events'
+}
+
+Table entries {
+  id text [pk, note: 'UUID']
+  event_id text [not null, ref: > events.id]
+  customer_id text [not null, ref: > customers.id]
+  entered_at text [not null]
+  pet_name text [not null]
+  breed text [not null]
+  size text [not null, note: 'small | medium | large']
+  other_pets text [not null, default: '']
+  email_opt_in integer [not null, default: 0]
+  sms_opt_in integer [not null, default: 0]
+  consent_version text [not null]
+  email_consent_text text [not null, note: 'Exact wording shown']
+  sms_consent_text text [not null, note: 'Exact wording shown']
+  rules_accepted integer [not null]
+  rules_text text [not null, note: 'Eligibility + rules exactly as shown']
+  eligible integer [not null, default: 1, note: 'Staff set 0 to exclude a test or ineligible entry from drawings']
+
+  indexes {
+    (event_id, customer_id) [unique, note: 'One entry per customer per event']
+    event_id [name: 'entries_event']
+  }
+
+  Note: 'One entry per customer per event; pet details and consent wording stay with the entry'
+}
+
+Table draws {
+  id text [pk, note: 'UUID']
+  event_id text [not null, ref: > events.id]
+  entry_id text [not null, ref: > entries.id]
+  drawn_at text [not null]
+  pool_size integer [not null, note: 'Eligible entries in the pool at draw time']
+
+  indexes {
+    (event_id, entry_id) [unique, note: 'An entry can win only once per event']
+  }
+
+  Note: 'Official winner selections in the order drawn; practice draws are never stored'
+}
